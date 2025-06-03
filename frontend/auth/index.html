@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swipe or Die</title>
+    <script src="validation.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id = 'container'>
+        <div id = 'main'>
+        <h1>Welcome back!</h1>
+        <h3>Enter your Credentails to access your account</h3>
+        <form action = "login" method = "POST" id="login-form">
+            <!-- Username Input -->
+            <div class = "input container">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Enter your username" required>
+              
+            </div>
+
+            <div class = "input container" id="password-container">
+                <button type="button" id="forgot_password_btn">forgot password</button>
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Name" required>
+              
+            </div>
+
+            <!-- Login Button -->
+            <div class = "input container">
+                <button type="submit">Login</button>
+            </div>
+
+            <hr> 
+
+            <!-- Social Login Buttons -->
+            <div class="social-buttons">
+                <button type="button" id="sign_in_google">
+                    <img src="/Swipe_or_Die/frontend/images/google_image.png" alt="Google logo" class="social-icon"> Sign in with Google
+                </button>
+                <button type="button" id="sign_in_apple">
+                    <img src="/Swipe_or_Die/frontend/images/apple_image.png" alt="Apple logo" class="social-icon"> Sign in with Apple
+                </button>
+            </div>
+
+            <!-- Sign Up Link -->
+            <h2>Don't have an account? <a href="signup.html">Sign Up</a></h2>
+            
+        </form>
+        </div>
+        <div id = 'background'>
+            <img src = "/Swipe_or_Die/frontend/images/chris-lee-70l1tDAI6rM-unsplash 1.png" alt="Monstera Plant">
+        </div>
+    </div>
+</body>
+</html>

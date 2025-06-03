@@ -1,0 +1,299 @@
+:root {
+    --header-font: 'Poppins', sans-serif;
+    --body-font: 'Poppins', sans-serif;
+
+    --primary-bg: #FFFFFF;
+    --primary-text: #1F2937; 
+    --secondary-text: #6B7280; 
+    --placeholder-text: #9CA3AF; 
+    --link-blue: #2563EB; 
+    --button-green: #3F6212;
+    --divider-gray: #D1D5DB;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--body-font);
+}
+
+#container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    background: var(--primary-bg);
+}
+
+#main {
+    flex: 0 0 45%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 3rem; 
+    background: var(--primary-bg);
+}
+
+#main form {
+    width: 100%;
+    max-width: 360px; 
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; 
+}
+
+/* Headings styling */
+#main h1 {
+    font-family: var(--header-font);
+    font-weight: 700;
+    color: var(--primary-text);
+    width: 100%;
+}
+/* Specific H1 for Login Page ("Welcome back!") */
+body:has(form[action="login"]) #main h1 { 
+    font-size: 2rem; 
+    margin-bottom: 0.2rem; 
+    text-align: center; 
+}
+/* Specific H1 for Signup Page ("Get Started Now") */
+body:has(form[action="signup_process.php"]) #main h1 { 
+    font-size: 1.8rem; 
+    margin-bottom: 0.2rem; /* Reduced margin to accommodate h3 below it */
+    text-align: center; 
+}
+
+
+/* Subtitle h3 - Now visible on both pages, styled generally */
+#main h3 {
+    font-size: 0.9rem; 
+    font-weight: 400;
+    color: var(--secondary-text);
+    width: 100%;
+    margin-bottom: 1.5rem; /* Default bottom margin */
+}
+/* Specific alignment for h3 on signup page if different from login */
+body:has(form[action="signup_process.php"]) #main h3 {
+    text-align: center; /* Align h3 to the left on signup, matching h1 */
+}
+body:has(form[action="login"]) #main h3 {
+    text-align: center; /* Keep h3 centered on login */
+}
+
+
+/* General input container, label, and input field styling */
+.input.container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem; 
+}
+
+label { 
+    font-size: 0.875rem; 
+    font-weight: 600; 
+    color: var(--primary-text);
+}
+
+input[type="text"],
+input[type="password"] { 
+    padding: 0.75rem 1rem; 
+    border: 1px solid var(--divider-gray);
+    border-radius: 0.375rem; 
+    font-size: 0.875rem; 
+    background: #F9FAFB; 
+    color: var(--primary-text);
+    outline: none;
+    width: 100%;
+}
+
+input[type="text"]::placeholder,
+input[type="password"]::placeholder {
+    color: var(--placeholder-text);
+    font-size: 0.875rem; 
+}
+
+
+/* Submit Buttons (Login and Signup) */
+button[type="submit"] { 
+    background: var(--button-green);
+    color: #fff;
+    border: none;
+    border-radius: 0.375rem; 
+    padding: 0.75rem 0; 
+    font-size: 1rem; 
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    width: 100%; 
+}
+button[type="submit"]:hover {
+    background: #33520e; 
+}
+
+form[action="login"] button[type="submit"] {
+    margin-top: 0.25rem; 
+}
+#signup_button { 
+    margin-top: 0.5rem; 
+}
+
+
+/* HR Separator with "Or" - Reusable */
+hr {
+    border: none;
+    border-top: 1px solid var(--divider-gray);
+    margin-top: 1rem; 
+    margin-bottom: 1rem; 
+    position: relative;
+    text-align: center;
+}
+hr::after {
+    content: 'Or';
+    position: relative; 
+    top: -0.7em; 
+    display: inline-block;
+    background: var(--primary-bg); 
+    padding: 0 0.6em; 
+    color: var(--secondary-text);
+    font-size: 0.875rem;
+    line-height: 1.4; 
+}
+
+/* Social Buttons - Reusable */
+.social-buttons {
+    display: flex; 
+    justify-content: center; 
+    gap: 1rem; 
+}
+#sign_in_google, #sign_in_apple, 
+#sign_in_google_from_signup, #sign_in_apple_from_signup {
+    flex-grow: 1; 
+    flex-basis: 0; 
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem; 
+    border: 1px solid var(--divider-gray);
+    background: #fff;
+    color: var(--primary-text);
+    border-radius: 0.375rem; 
+    padding: 0.6rem 0.5rem; 
+    font-size: 0.875rem; 
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, border 0.2s;
+    text-align: center; 
+}
+.social-icon {
+    width: 16px; 
+    height: 16px; 
+}
+#sign_in_google:hover, #sign_in_apple:hover,
+#sign_in_google_from_signup:hover, #sign_in_apple_from_signup:hover {
+    background: #f3f4f6; 
+    border-color: #bdbdbd; 
+}
+
+/* Bottom link text (e.g., "Don't have an account?") - Reusable structure */
+#main form > h2 { 
+    font-size: 0.875rem; 
+    font-weight: 400;
+    color: var(--secondary-text);
+    text-align: center;
+    margin-top: 0.75rem; 
+}
+#main form > h2 a {
+    color: var(--link-blue);
+    text-decoration: none;
+    font-weight: 600; 
+    margin-left: 0.3rem;
+}
+#main form > h2 a:hover {
+    text-decoration: underline;
+}
+
+/* Password Container on LOGIN page specific styling */
+div.input.container#password-container { 
+    display: flex;
+    flex-direction: row; 
+    flex-wrap: wrap;     
+    justify-content: space-between; 
+    align-items: baseline; 
+    row-gap: 0.3rem; 
+    margin-top: 0.5rem; 
+}
+div.input.container#password-container > label[for="password"] {
+    order: 1; 
+    font-size: 0.875rem; 
+    font-weight: 600; 
+    color: var(--primary-text);
+}
+div.input.container#password-container > #forgot_password_btn {
+    order: 2; 
+    background: none;
+    border: none;
+    color: var(--secondary-text); 
+    font-size: 0.8rem; 
+    font-weight: 400; 
+    cursor: pointer;
+    padding: 0; 
+    text-transform: lowercase; 
+}
+div.input.container#password-container > input#password {
+    order: 3; 
+    width: 100%; 
+}
+
+/* Checkbox container for SIGNUP page */
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.25rem; 
+    margin-bottom: 0.25rem; 
+}
+.checkbox-container input[type="checkbox"] {
+    accent-color: var(--button-green);
+    width: 1rem; 
+    height: 1rem;
+    margin: 0; 
+}
+.checkbox-container label { 
+    font-size: 0.8rem; 
+    font-weight: 400;
+    color: var(--secondary-text);
+}
+.checkbox-container label a {
+    color: var(--link-blue); 
+    text-decoration: underline; 
+    font-weight: 500; 
+}
+.checkbox-container label a:hover {
+    text-decoration: none;
+}
+
+/* Background Image - Reusable */
+#background {
+    flex: 0 0 55%;
+    overflow: hidden;
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+}
+#background img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-top-left-radius: 2rem;
+    border-bottom-left-radius: 2rem;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.error-message {
+    color: #D32F2F; /* A reddish error color */
+    font-size: 0.75rem; /* Smaller font for error messages */
+    display: block; /* Make it take its own line or adjust as needed */
+    margin-top: 0.25rem; /* A little space above the error message */
+    /* display: none; Initially hidden, JS will show it */ /* Commented out as JS handles display directly */
+}

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Started - Swipe or Die</title>
+    <script src="validation.js" defer></script> 
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id = 'container'>
+        <div id = 'main'>
+        <h1>Get Started Now</h1>
+        <h3>Create your account to continue</h3>
+
+        <form action="signup_process.php" method="POST" id="signup-form"> 
+
+            <div class="input container">
+                <label for="full_name">Name</label>
+                <input type="text" id="full_name" name="full_name" placeholder="Enter your name" required>
+                <span class="error-message" id="full_name-error"></span> 
+            </div>
+
+            <div class="input container">
+                <label for="signup_password">Password</label>
+                <input type="password" id="signup_password" name="signup_password" placeholder="Name" required>
+                <span class="error-message" id="signup_password-error"></span> 
+            </div>
+            
+            <!-- Optional: Add Password Confirmation Field (Recommended)
+            <div class="input container">
+                <label for="confirm_password">Confirm Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm your password" required>
+                <span class="error-message" id="confirm_password-error"></span>
+            </div>
+            -->
+
+            <div class="checkbox-container">
+                <input type="checkbox" id="terms_agree" name="terms_agree" required>
+                <label for="terms_agree">I agree to the <a href="terms.html" target="_blank">terms & policy</a></label>
+                <span class="error-message" id="terms_agree-error"></span> 
+            </div>
+            
+            <div class="input container"> 
+                <button type="submit" id="signup_button">Signup</button>
+            </div>      
+
+            <hr> 
+
+            <div class="social-buttons">
+                <button type="button" id="sign_in_google_from_signup">
+                    <img src="/Swipe_or_Die/frontend/images/google_image.png" alt="Google logo" class="social-icon"> Sign in with Google
+                </button>
+                <button type="button" id="sign_in_apple_from_signup">
+                    <img src="/Swipe_or_Die/frontend/images/apple_image.png" alt="Apple logo" class="social-icon"> Sign in with Apple
+                </button>
+            </div>
+
+            <h2>Have an account? <a href="index.html">Sign In</a></h2> 
+        </form>
+        </div>
+        <div id = 'background'>
+            <img src = "/Swipe_or_Die/frontend/images/chris-lee-70l1tDAI6rM-unsplash 1.png" alt="Monstera Plant">
+        </div>
+    </div>
+    <div>
+        
+    </div>
+</body>
+</html>
