@@ -1,0 +1,466 @@
+:root {
+    --primary-green: #2E7D32;
+    --secondary-green: #66BB6A;
+    --text-dark: #333;
+    --text-light: #f9f9f9;
+    --background-light: #F7F9F7; /* Slightly warmer */
+    --border-color: #ddd;
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'Poppins', sans-serif;
+    --error-red: #D32F2F;
+
+    --card-bg: #fff;
+    --card-shadow: 0 10px 35px rgba(46, 125, 50, 0.12), 0 2px 10px rgba(0,0,0,0.08); /* Enhanced shadow */
+    --accent-red-swipe: #e74c3c;
+    --button-shadow: 0 4px 16px rgba(46, 125, 50, 0.10);
+    --border-light-swipe: #eaeaea;
+
+    /* Animation specific vars */
+    --card-swipe-duration: 0.6s;
+    --card-feedback-duration: 0.3s;
+    --card-reaction-tilt: 5deg;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--background-light);
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+    padding: 20px 0; /* Added vertical padding */
+}
+
+body.modal-active {
+    overflow: hidden;
+}
+nav {
+    display: none !important;
+}
+
+/* --- HERO SECTION --- */
+.swipe-hero {
+    padding-top: 0;
+    margin-bottom: 0;
+    width: 100%;
+    max-width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.swipe-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 7vw, 4rem);
+    color: var(--primary-green);
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 0;
+    text-align: center;
+}
+
+.swipe-title span {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.swipe-title span.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.swipe-tagline {
+    display: none !important;
+}
+
+/* --- CARD AREA --- */
+.swipe-card-area {
+    flex: 1;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.swipe-card-stack {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    min-height: 0;
+    height: 70vh;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.swipe-card {
+    display: flex;
+    flex-direction: row;
+    width: 820px;
+    height: 420px;
+    max-width: 95vw;
+    max-height: 80vh;
+    background: var(--card-bg);
+    border-radius: 32px;
+    box-shadow: 0 12px 40px rgba(46, 125, 50, 0.13), 0 2px 10px rgba(0,0,0,0.07);
+    overflow: hidden;
+    position: relative;
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s;
+    transform-origin: center;
+    z-index: 2;
+}
+
+.swipe-card-thumb {
+    width: 45%;
+    height: 100%;
+    min-width: 260px;
+    background: #222;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    border-top-left-radius: 32px;
+    border-bottom-left-radius: 32px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.swipe-card-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.swipe-card-info {
+    width: 55%;
+    padding: 36px 36px 28px 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    background: var(--card-bg);
+    overflow: hidden;
+    justify-content: center;
+}
+
+@media (max-width: 900px) {
+    .swipe-card {
+        width: 98vw;
+        height: 340px;
+        border-radius: 18px;
+    }
+    .swipe-card-thumb {
+        min-width: 120px;
+        border-radius: 18px 0 0 18px;
+    }
+    .swipe-card-info {
+        padding: 18px 10px 14px 10px;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 700px) {
+    .swipe-card {
+        flex-direction: column;
+        width: 98vw;
+        height: 420px;
+        max-width: 99vw;
+        max-height: 80vh;
+        border-radius: 16px;
+    }
+    .swipe-card-thumb {
+        width: 100%;
+        height: 45%;
+        min-width: 0;
+        min-height: 120px;
+        border-radius: 16px 16px 0 0;
+    }
+    .swipe-card-info {
+        width: 100%;
+        padding: 12px 8px 10px 8px;
+        gap: 7px;
+    }
+}
+
+/* --- FEEDBACK OVERLAYS --- */
+.swipe-feedback {
+    position: absolute;
+    top: 35px; /* Slightly lower */
+    padding: 12px 25px;
+    border-radius: 12px;
+    font-size: clamp(1.5rem, 5.5vw, 2.2rem);
+    font-weight: bold;
+    color: var(--text-light);
+    opacity: 0;
+    /* More dynamic transition for feedback */
+    transition: opacity var(--card-feedback-duration) ease-in-out, transform var(--card-feedback-duration) cubic-bezier(0.215, 0.610, 0.355, 1);
+    text-transform: uppercase;
+    pointer-events: none;
+    border: 3px solid rgba(255,255,255,0.7); /* Thicker border */
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.25);
+    z-index: 3;
+}
+
+.swipe-feedback.left {
+    left: 30px;
+    background: linear-gradient(90deg, var(--accent-red-swipe) 70%, transparent 100%);
+    transform: rotate(-15deg) scale(0.8); /* Initial state for animation */
+    --current-feedback-rotate: -10deg; /* CSS var for JS to potentially override or for keyframes */
+}
+.swipe-feedback.right {
+    right: 30px;
+    background: linear-gradient(270deg, var(--secondary-green) 70%, transparent 100%);
+    transform: rotate(15deg) scale(0.8); /* Initial state for animation */
+    --current-feedback-rotate: 10deg;
+}
+
+.swipe-card.show-feedback-left .swipe-feedback.left,
+.swipe-card.show-feedback-right .swipe-feedback.right {
+    opacity: 0.95; /* Slightly transparent */
+    transform: scale(1.1) rotate(var(--current-feedback-rotate));
+}
+
+/* --- CARD REACTION & SWIPE ANIMATIONS --- */
+/* Class for immediate reaction before full swipe */
+.swipe-card.reacting-left {
+    transform: rotate(calc(-1 * var(--card-reaction-tilt)));
+}
+.swipe-card.reacting-right {
+    transform: rotate(var(--card-reaction-tilt));
+}
+
+.swipe-card.swiping-left {
+    transform: translateX(-150%) rotate(-20deg) !important; /* More pronounced exit */
+    opacity: 0 !important;
+}
+.swipe-card.swiping-right {
+    transform: translateX(150%) rotate(20deg) !important; /* More pronounced exit */
+    opacity: 0 !important;
+}
+.swipe-card.new-card-prepare {
+    opacity: 0;
+    transform: translateY(50px) scale(0.92); /* Start further down and smaller */
+    /* Ensure transition is active for entry */
+    transition: transform var(--card-swipe-duration) cubic-bezier(0.34, 1.56, 0.64, 1), opacity calc(var(--card-swipe-duration) * 0.8) ease-in-out;
+}
+
+
+/* --- ACTION BUTTONS --- */
+.swipe-actions {
+    gap: 35px; /* More space */
+    margin-top: 30px; /* Increased margin */
+    display: flex;
+    justify-content: center;
+    padding-bottom: 20px; /* Ensure space from footer */
+}
+
+.action-btn {
+    width: 70px; /* Larger buttons */
+    height: 70px;
+    font-size: 2rem; /* Larger icon */
+    border-radius: 50%;
+    background: var(--card-bg); /* Consistent with card */
+    border: 2.5px solid; /* Border color set individually */
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.06); /* Refined shadow */
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s, background-color 0.2s, color 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    outline: none;
+    cursor: pointer;
+}
+
+#swipeLeftButton {
+    color: var(--accent-red-swipe);
+    border-color: var(--accent-red-swipe);
+}
+#swipeLeftButton:hover {
+    background-color: var(--accent-red-swipe);
+    color: var(--text-light);
+    transform: scale(1.15); /* More pronounced hover */
+    box-shadow: 0 10px 25px -5px rgba(231, 76, 60, 0.25);
+}
+
+#swipeRightButton {
+    color: var(--primary-green);
+    border-color: var(--primary-green);
+}
+#swipeRightButton:hover {
+    background-color: var(--primary-green);
+    color: var(--text-light);
+    transform: scale(1.15); /* More pronounced hover */
+    box-shadow: 0 10px 25px -5px rgba(46, 125, 50, 0.25);
+}
+
+.action-btn:active {
+    transform: scale(1.05); /* Slightly smaller active scale */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+}
+
+/* --- NO MORE CARDS MESSAGE --- */
+#noMoreCardsMessage {
+    font-size: clamp(1.2rem, 5vw, 1.5rem); /* Slightly larger */
+    color: var(--text-dark);
+    text-align: center;
+    padding: 40px 25px;
+    background: var(--card-bg);
+    border-radius: 20px; /* Match card style */
+    box-shadow: var(--card-shadow);
+    margin-top: 0; /* Will be absolutely positioned or flex-centered in stack */
+    width: 90%;
+    max-width: 400px; /* Ensure it fits within stack width */
+    opacity: 0; /* Hidden by default, JS controls display */
+    transform: scale(0.95);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    pointer-events: none; /* Initially not interactive */
+}
+#noMoreCardsMessage.visible { /* Class to show the message */
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+}
+
+#noMoreCardsMessage .emoji {
+    font-size: 2.5em;
+    display: block;
+    margin-bottom: 15px;
+}
+
+/* --- VIDEO MODAL --- */
+.video-modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Darker overlay */
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    display: none; /* JS controls this */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.4s ease; /* Smoother transition */
+}
+.video-modal-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+.video-modal-content {
+    background: #111; /* Darker modal for video focus */
+    padding: 20px;
+    border-radius: 16px; /* Softer radius */
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6); /* Stronger shadow */
+    position: relative;
+    width: 90%;
+    max-width: 960px; /* Slightly larger max-width */
+    transform: scale(0.9);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.video-modal-overlay.active .video-modal-content {
+    transform: scale(1);
+}
+
+.video-modal-close {
+    position: absolute;
+    top: -18px; right: -18px; /* Further out */
+    font-size: 1.6rem; /* Adjusted size */
+    font-weight: bold;
+    color: #fff;
+    background: var(--primary-green);
+    border-radius: 50%;
+    width: 42px; height: 42px; /* Larger close button */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.25s, transform 0.25s ease-out;
+    line-height: 1;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    border: 2px solid #fff; /* Border for better visibility */
+}
+.video-modal-close:hover {
+    background: var(--secondary-green);
+    transform: rotate(180deg) scale(1.1); /* More interactive hover */
+}
+
+.video-iframe-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    overflow: hidden;
+    border-radius: 10px; /* Rounded corners for iframe container */
+    background-color: #000; /* Black bg for iframe */
+}
+
+.video-iframe-container iframe {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    border: none;
+}
+
+/* --- FOOTER --- */
+footer {
+    margin-top: auto; /* Pushes footer to bottom if content is short */
+    padding-top: 30px; /* More space above footer */
+    font-size: 0.9em;
+    color: #666; /* Slightly lighter */
+    text-align: center;
+    padding-bottom: 20px;
+    width: 100%;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) { /* Adjusted breakpoint */
+    .swipe-hero {
+        padding-top: 5px;
+        margin-bottom: 5px;
+    }
+    .swipe-card-stack {
+        max-width: 98vw;
+        height: 62vh;
+        min-height: 260px;
+    }
+    .swipe-card-thumb {
+        min-height: 80px;
+        max-height: 120px;
+    }
+    .swipe-card-info {
+        padding: 10px 6px;
+        gap: 7px;
+    }
+}
+
+@media (max-width: 480px) { /* Adjusted breakpoint for smaller devices */
+     body {
+        padding: 10px 0;
+    }
+    .swipe-hero {
+        padding-top: 2px;
+        margin-bottom: 2px;
+    }
+    .swipe-card-stack {
+        height: 56vh;
+        min-height: 180px;
+    }
+    .swipe-card-thumb {
+        min-height: 60px;
+        max-height: 90px;
+    }
+}

@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     function goToHomePage(username){
         sessionStorage.setItem('username', username);
-        window.location.href = '/Swipe_or_Die/frontend/landing.html'
+        window.location.href = '/frontend/landing.html'
     }
     if (loginForm) {
         loginForm.addEventListener('submit', async function(event) {

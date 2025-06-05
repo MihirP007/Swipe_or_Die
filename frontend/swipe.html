@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swipe OR Die – Discover</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="landing.css">
+    <link rel="stylesheet" href="swipe.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <nav>
+        <div class="logo-placeholder"><img src="images/logo.png" width="160" alt="Logo"></div>
+        <div class="hamburger-menu">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+    </nav>
+
+    <img src="images/Leaf.png" alt="Decorative Leaf" class="leaf top-left">
+    <img src="images/Leaf.png" alt="Decorative Leaf" class="leaf bottom-right">
+
+    <main class="swipe-main">
+        <section class="swipe-hero">
+            <h1 class="swipe-title" data-text="Swipe OR Die">Swipe OR Die</h1>
+            <!-- <p class="swipe-tagline">Find your next binge with a swipe!</p> -->
+        </section>
+
+        <section class="swipe-card-area">
+            <div class="swipe-card-stack">
+                <div class="swipe-card" id="swipeCard">
+                    <div class="swipe-card-thumb" id="cardThumbnailContainer">
+                        <img src="images/placeholder_card.png" alt="Thumbnail" id="cardThumbnail">
+                        <div class="play-icon-overlay"><i class="fas fa-play-circle"></i></div>
+                    </div>
+                    <div class="swipe-card-info">
+                        <div class="swipe-card-header">
+                            <h2 id="cardTitle">Title</h2>
+                            <span id="cardReleaseDate" class="release-date">Year</span>
+                        </div>
+                        <div class="swipe-card-details">
+                            <span class="detail-label"><i class="fas fa-film"></i> <span id="cardGenre">Genre</span></span>
+                            <span class="detail-label"><i class="fas fa-star"></i> <span id="cardImdbRating">IMDB</span></span>
+                        </div>
+                        <div class="swipe-card-cast">
+                            <span class="detail-label"><i class="fas fa-users"></i> Cast</span>
+                            <span id="cardCast" class="cast-list">Cast Names</span>
+                        </div>
+                        <div class="swipe-card-summary">
+                            <span class="detail-label"><i class="fas fa-info-circle"></i> Summary</span>
+                            <span id="cardSummary" class="summary-text">Summary goes here.</span>
+                        </div>
+                    </div>
+                    <div class="swipe-feedback left">NOPE</div>
+                    <div class="swipe-feedback right">LIKE</div>
+                </div>
+                <!-- No more cards message will be injected here -->
+            </div>
+            <div class="swipe-actions">
+                <button id="swipeLeftButton" class="action-btn" aria-label="Nope">
+                    <i class="fas fa-times"></i>
+                </button>
+                <button id="swipeRightButton" class="action-btn" aria-label="Like">
+                    <i class="fas fa-heart"></i>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Video Modal -->
+    <div id="videoModal" class="video-modal-overlay">
+        <div class="video-modal-content">
+            <span class="video-modal-close" id="videoModalClose">×</span>
+            <div class="video-iframe-container">
+                <iframe id="videoPlayer" width="560" height="315" src="" title="Video Player" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Made with love by Yami and Chutney</p>
+    </footer>
+    <script src="swipe.js"></script>
+</body>
+</html>
