@@ -1,12 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Title animation
+    // --- TITLE ANIMATION ---
     const swipeTitleElement = document.querySelector('.swipe-title');
     if (swipeTitleElement && swipeTitleElement.getAttribute('data-text')) {
         const text = swipeTitleElement.getAttribute('data-text');
         swipeTitleElement.innerHTML = '';
         text.split('').forEach((char, i) => {
             const span = document.createElement('span');
-            span.textContent = char === ' ' ? '\u00A0' : char; // Handle spaces
+            span.textContent = char === ' ' ? '\u00A0' : char;
             span.style.transitionDelay = `${i * 0.08}s`;
             swipeTitleElement.appendChild(span);
         });
@@ -17,18 +17,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 100);
     }
 
-    // --- SWIPE LOGIC ---
+    // --- DOM ELEMENTS ---
     const swipeCard = document.getElementById('swipeCard');
     const swipeLeftButton = document.getElementById('swipeLeftButton');
     const swipeRightButton = document.getElementById('swipeRightButton');
     const noMoreCardsMessage = document.getElementById('noMoreCardsMessage');
     const swipeCardStack = document.querySelector('.swipe-card-stack');
     const actionButtonsContainer = document.querySelector('.swipe-actions');
-
-
-    // DOM Elements for card content
     const cardThumbnail = document.getElementById('cardThumbnail');
     const cardTitle = document.getElementById('cardTitle');
+    const cardTitleOverlayElement = document.getElementById('cardTitleOverlayElement');
     const cardReleaseDate = document.getElementById('cardReleaseDate');
     const cardGenre = document.getElementById('cardGenre');
     const cardImdbRating = document.getElementById('cardImdbRating');
@@ -36,8 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cardSummary = document.getElementById('cardSummary');
     const cardThumbnailContainer = document.getElementById('cardThumbnailContainer');
 
-
-    // Sample Data - Replace with actual data fetching
+    // --- MOVIE DATA ---
     const moviesData = [
         {
             id: 1,
@@ -47,8 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
             imdb: "8.2",
             cast: "Anya Sharma, Ben Carter, Chloe Davis",
             summary: "In a future where memories can be traded, a detective uncovers a conspiracy that challenges the nature of identity itself. Gripping and thought-provoking.",
-            thumbnailUrl: "https://picsum.photos/seed/movie1/600/400", // Placeholder image
-            videoId: "dQw4w9WgXcQ" // Sample YouTube video ID
+            thumbnailUrl: "https://picsum.photos/seed/movie1/600/400",
+            videoId: "dQw4w9WgXcQ"
         },
         {
             id: 2,
@@ -89,90 +86,86 @@ document.addEventListener('DOMContentLoaded', () => {
     const likedMovies = [];
     const dislikedMovies = [];
 
+    // --- CARD POPULATION ---
     function populateCard(movie) {
-        cardThumbnail.src = movie.thumbnailUrl;
-        cardThumbnail.alt = movie.title + " thumbnail";
-        cardTitle.textContent = movie.title;
-        cardReleaseDate.textContent = movie.year;
-        cardGenre.textContent = movie.genre;
-        cardImdbRating.textContent = movie.imdb;
-        cardCast.textContent = movie.cast;
-        cardSummary.textContent = movie.summary;
-
-        // Store videoId for modal
-        cardThumbnailContainer.dataset.videoId = movie.videoId;
+        if (cardThumbnail) {
+            cardThumbnail.src = movie.thumbnailUrl;
+            cardThumbnail.alt = movie.title + " thumbnail";
+        }
+        if (cardTitle) cardTitle.textContent = movie.title;
+        if (cardTitleOverlayElement) cardTitleOverlayElement.textContent = movie.title;
+        if (cardReleaseDate) cardReleaseDate.textContent = movie.year;
+        if (cardGenre) cardGenre.textContent = movie.genre;
+        if (cardImdbRating) cardImdbRating.textContent = movie.imdb;
+        if (cardCast) cardCast.textContent = movie.cast;
+        if (cardSummary) cardSummary.textContent = movie.summary;
+        if (cardThumbnailContainer) cardThumbnailContainer.dataset.videoId = movie.videoId;
     }
 
+    // --- SHOW NEXT CARD ---
     function showNextCard() {
         if (!swipeCard) return;
-
-        swipeCard.classList.remove('swiping-left', 'swiping-right', 'show-feedback-left', 'show-feedback-right', 'reacting-left', 'reacting-right');
-        swipeCard.classList.add('new-card-prepare'); // Prepare for entry animation
+        swipeCard.classList.remove('swiping-left', 'swiping-right', 'show-feedback-left', 'show-feedback-right', 'reacting-left', 'reacting-right', 'details-visible');
+        swipeCard.style.transform = '';
+        swipeCard.style.opacity = '';
 
         if (currentCardIndex < moviesData.length) {
             const movie = moviesData[currentCardIndex];
             populateCard(movie);
-            
-            // Animate in the new card
-            setTimeout(() => {
-                swipeCard.classList.remove('new-card-prepare');
-                swipeCard.style.opacity = '1'; // Ensure visible
-                swipeCard.style.transform = 'translateY(0) scale(1)'; // Ensure at final position
-            }, 50); // Short delay for styles to apply
+            swipeCard.classList.add('new-card-prepare');
+            if (swipeCard.style.display === 'none') swipeCard.style.display = 'flex';
+            requestAnimationFrame(() => {
+                setTimeout(() => {
+                    swipeCard.classList.remove('new-card-prepare');
+                }, 50);
+            });
         } else {
-            // No more cards
             swipeCard.style.display = 'none';
             actionButtonsContainer.style.display = 'none';
             if (noMoreCardsMessage) {
-                noMoreCardsMessage.style.display = 'block'; // Show the message
-                setTimeout(() => noMoreCardsMessage.classList.add('visible'), 50); // Animate in
+                noMoreCardsMessage.style.display = 'block';
+                setTimeout(() => noMoreCardsMessage.classList.add('visible'), 50);
             }
             console.log("No more cards!");
+            console.log("Final Liked Movies:", likedMovies.map(m => m.title));
+            console.log("Final Disliked Movies:", dislikedMovies.map(m => m.title));
         }
     }
 
+    // --- HANDLE SWIPE ACTION ---
     function handleSwipeAction(direction) {
         if (!swipeCard || currentCardIndex >= moviesData.length) return;
-
         const movie = moviesData[currentCardIndex];
-        const cardReactionTime = 150; // ms, how long the card "reacts" before swiping
-        const cardSwipeTime = 600; // ms, must match CSS --card-swipe-duration
+        const cardReactionTime = 150;
+        const cardSwipeTime = 600;
 
         if (direction === 'left') {
             dislikedMovies.push(movie);
-            swipeCard.classList.add('show-feedback-left');
-            swipeCard.classList.add('reacting-left');
+            swipeCard.classList.add('show-feedback-left', 'reacting-left');
             setTimeout(() => {
                 swipeCard.classList.remove('reacting-left');
                 swipeCard.classList.add('swiping-left');
             }, cardReactionTime);
         } else {
             likedMovies.push(movie);
-            swipeCard.classList.add('show-feedback-right');
-            swipeCard.classList.add('reacting-right');
-             setTimeout(() => {
+            swipeCard.classList.add('show-feedback-right', 'reacting-right');
+            setTimeout(() => {
                 swipeCard.classList.remove('reacting-right');
                 swipeCard.classList.add('swiping-right');
             }, cardReactionTime);
         }
 
-        console.log("Liked:", likedMovies.map(m => m.title));
-        console.log("Disliked:", dislikedMovies.map(m => m.title));
-
         currentCardIndex++;
-        setTimeout(showNextCard, cardReactionTime + cardSwipeTime - 100); // Load next card slightly before animation ends
+        setTimeout(showNextCard, cardReactionTime + cardSwipeTime - 100);
     }
 
-    if (swipeLeftButton && swipeRightButton && swipeCard) {
+    // --- BUTTON EVENTS & INITIAL LOAD ---
+    if (swipeLeftButton && swipeRightButton && swipeCard && swipeCardStack && actionButtonsContainer) {
         swipeLeftButton.addEventListener('click', () => handleSwipeAction('left'));
         swipeRightButton.addEventListener('click', () => handleSwipeAction('right'));
-        
-        // Initial card load
         showNextCard();
     } else {
-        if (!swipeCardStack && moviesData.length > 0) { // If card stack itself is missing, but we have data
-            console.error("Swipe card stack or essential card elements not found.");
-        }
+        console.error("Essential swipe UI elements not found. Check IDs and structure in your HTML.");
     }
 
     // --- VIDEO MODAL LOGIC ---
@@ -184,23 +177,25 @@ document.addEventListener('DOMContentLoaded', () => {
         cardThumbnailContainer.addEventListener('click', () => {
             const videoId = cardThumbnailContainer.dataset.videoId;
             if (videoId) {
-                videoPlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+                videoPlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`;
                 videoModalOverlay.classList.add('active');
                 document.body.classList.add('modal-active');
             }
         });
 
-        videoModalClose.addEventListener('click', () => {
+        const closeModal = () => {
             videoModalOverlay.classList.remove('active');
             document.body.classList.remove('modal-active');
-            videoPlayer.src = ''; // Stop video
-        });
+            videoPlayer.src = '';
+        };
 
+        videoModalClose.addEventListener('click', closeModal);
         videoModalOverlay.addEventListener('click', (e) => {
-            if (e.target === videoModalOverlay) { // Click on overlay itself
-                videoModalOverlay.classList.remove('active');
-                document.body.classList.remove('modal-active');
-                videoPlayer.src = ''; // Stop video
+            if (e.target === videoModalOverlay) closeModal();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "Escape" && videoModalOverlay.classList.contains('active')) {
+                closeModal();
             }
         });
     }

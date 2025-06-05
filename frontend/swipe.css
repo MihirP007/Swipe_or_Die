@@ -3,22 +3,17 @@
     --secondary-green: #66BB6A;
     --text-dark: #333;
     --text-light: #f9f9f9;
-    --background-light: #F7F9F7; /* Slightly warmer */
+    --background-light: #F7F9F7;
     --border-color: #ddd;
     --font-display: 'Playfair Display', serif;
     --font-body: 'Poppins', sans-serif;
     --error-red: #D32F2F;
-
-    --card-bg: #fff;
-    --card-shadow: 0 10px 35px rgba(46, 125, 50, 0.12), 0 2px 10px rgba(0,0,0,0.08); /* Enhanced shadow */
+    --card-bg: rgba(255, 255, 255, 0.65); /* Semi-transparent white for glass base */
+    --card-shadow: 0 8px 32px rgba(46, 125, 50, 0.10), 0 1.5px 8px rgba(0,0,0,0.07);
     --accent-red-swipe: #e74c3c;
     --button-shadow: 0 4px 16px rgba(46, 125, 50, 0.10);
     --border-light-swipe: #eaeaea;
-
-    /* Animation specific vars */
-    --card-swipe-duration: 0.6s;
-    --card-feedback-duration: 0.3s;
-    --card-reaction-tilt: 5deg;
+    --card-swipe-duration: 0.6s; /* Matches JS cardSwipeTime (600ms) */
 }
 
 * {
@@ -36,109 +31,124 @@ body {
     flex-direction: column;
     align-items: center;
     overflow-x: hidden;
-    padding: 20px 0; /* Added vertical padding */
+    padding: 0;
 }
 
 body.modal-active {
     overflow: hidden;
 }
-nav {
-    display: none !important;
+
+/* --- LOGO --- */
+.logo-placeholder {
+    position: absolute;
+    top: 24px;
+    left: 32px;
+    z-index: 10;
 }
 
 /* --- HERO SECTION --- */
-.swipe-hero {
-    padding-top: 0;
+/* .swipe-hero {
+    min-height: 0;
+    padding-top: 1px;
+    padding-bottom: 20px;
     margin-bottom: 0;
-    width: 100%;
-    max-width: 100vw;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
+} */
 
 .swipe-title {
     font-family: var(--font-display);
-    font-size: clamp(2.5rem, 7vw, 4rem);
+    font-size: clamp(2.2rem, 7vw, 3.2rem);
     color: var(--primary-green);
     font-weight: 700;
     letter-spacing: 2px;
-    margin-bottom: 0;
+    margin-bottom: 10px;
     text-align: center;
 }
 
-.swipe-title span {
-    display: inline-block;
+.swipe-title span { /* For title animation */
     opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    transform: translateY(20px) scale(0.8);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    display: inline-block;
 }
+
 .swipe-title span.visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
 }
 
 .swipe-tagline {
-    display: none !important;
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
+    color: var(--text-dark);
+    opacity: 0.85;
+    margin-bottom: 10px;
 }
 
 /* --- CARD AREA --- */
 .swipe-card-area {
-    flex: 1;
-    width: 100vw;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    min-height: 0;
-    margin: 0;
-    padding: 0;
+    width: 100%;
+    flex: 1;
+    margin-bottom: 0px;
 }
 
 .swipe-card-stack {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    min-height: 500px;
+    margin: 0 auto;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100vw;
-    min-height: 0;
-    height: 70vh;
-    max-width: 900px;
-    margin: 0 auto;
+
+    perspective: 1000px; /* Add perspective for 3D effect */
 }
 
+/* --- CARD --- */
 .swipe-card {
+    width: 100%;
+    margin-top: 27vh;
+    /* REMOVED: border: black 10px solid; */
+    min-width: 500px; 
+    min-height: 500px;
+    background: var(--card-bg); /* Uses the new semi-transparent variable */
+    border-radius: 22px;
+    box-shadow: var(--card-shadow);
+    overflow: hidden; /* Important for border-radius and backdrop-filter */
     display: flex;
-    flex-direction: row;
-    width: 820px;
-    height: 420px;
-    max-width: 95vw;
-    max-height: 80vh;
-    background: var(--card-bg);
-    border-radius: 32px;
-    box-shadow: 0 12px 40px rgba(46, 125, 50, 0.13), 0 2px 10px rgba(0,0,0,0.07);
-    overflow: hidden;
-    position: relative;
-    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s;
+    flex-direction: column;
+    position: absolute;
+    transition: 
+        transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 0.5s,
+        opacity var(--card-swipe-duration) ease,
+        z-index 0.2s;
     transform-origin: center;
     z-index: 2;
+
+    /* ADDED: New border for glass effect */
+    border: 1px solid rgba(255, 255, 255, 0.35);
+
+    /* ADDED: Glass effect */
+    -webkit-backdrop-filter: blur(12px); /* For Safari */
+    backdrop-filter: blur(12px);
 }
 
 .swipe-card-thumb {
-    width: 45%;
-    height: 100%;
-    min-width: 260px;
-    background: #222;
+    width: 100%;
+    height: 520px;
+     /* Fallback if image fails */
     position: relative;
-    cursor: pointer;
     overflow: hidden;
-    border-top-left-radius: 32px;
-    border-bottom-left-radius: 32px;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border-radius: 22px; /* Rounded corners for the thumbnail area itself */
+    display: block;
+    cursor: pointer; /* For opening video modal */
+
+    /* ADDED: Padding for the image */
+    padding: 10px;
+    box-sizing: border-box; /* Ensure padding is included in width/height */
 }
 
 .swipe-card-thumb img {
@@ -146,144 +156,255 @@ nav {
     height: 100%;
     object-fit: cover;
     display: block;
+    transition: transform 0.3s ease;
+    /* ADDED: border-radius for the image itself inside the padding */
+    border-radius: 16px;
 }
 
-.swipe-card-info {
-    width: 55%;
-    padding: 36px 36px 28px 36px;
+.play-icon-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 4.5rem;
+    color: rgba(255, 255, 255, 0.85);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 1;
+}
+
+.swipe-card-thumb:hover .play-icon-overlay {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
+}
+.swipe-card-thumb:hover img {
+    transform: scale(1.05);
+}
+
+.swipe-card-title-overlay {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    /* Adjust gradient to account for image padding if it looks off */
+    background: linear-gradient(0deg, rgba(34,34,34,0.85) 70%, rgba(34,34,34,0.0) 100%);
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 700;
+    padding: 10px 12px 6px 12px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    z-index: 2;
+    pointer-events: none;
+    /* Match image border-radius if the overlay sits directly on the padded image edge */
+    border-bottom-left-radius: 16px; /* Was 22px */
+    border-bottom-right-radius: 16px; /* Was 22px */
+    transition: opacity 0.3s;
+    width: calc(100% - 20px); /* Account for 10px padding on each side of thumb */
+    left: 10px; /* Offset by thumb padding */
+    bottom: 10px; /* Offset by thumb padding */
+    text-align: center;
+    margin: 0;
+    max-width: calc(100% - 20px); /* Account for padding */
+}
+
+.swipe-card-details-panel {
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    /* MODIFIED: Background for glass effect over image */
+    background: rgba(255, 255, 255, 0.75); /* Slightly more transparent for panel overlay */
+    padding: 28px 24px 20px 24px;
+    border-radius: 22px; /* Matches main card radius */
     display: flex;
     flex-direction: column;
-    gap: 18px;
-    background: var(--card-bg);
-    overflow: hidden;
-    justify-content: center;
+    gap: 12px;
+    z-index: 3;
+    transition: opacity 0.35s ease;
+    overflow-y: auto;
+
+    /* ADDED: Glass effect for the details panel (blurs image behind it on hover) */
+    -webkit-backdrop-filter: blur(8px); /* For Safari */
+    backdrop-filter: blur(8px);
 }
 
-@media (max-width: 900px) {
-    .swipe-card {
-        width: 98vw;
-        height: 340px;
-        border-radius: 18px;
-    }
-    .swipe-card-thumb {
-        min-width: 120px;
-        border-radius: 18px 0 0 18px;
-    }
-    .swipe-card-info {
-        padding: 18px 10px 14px 10px;
-        gap: 10px;
-    }
+/* Desktop: On hover, show details panel */
+.swipe-card:hover .swipe-card-details-panel,
+.swipe-card:focus-within .swipe-card-details-panel {
+    opacity: 1;
+    pointer-events: auto;
+}
+.swipe-card:hover .swipe-card-title-overlay,
+.swipe-card:focus-within .swipe-card-title-overlay {
+    opacity: 0.1;
+}
+.swipe-card:hover,
+.swipe-card:focus-within {
+    transform: rotate3d(0.5, 1, 0, 18deg) scale(1.025) translateY(-6px);
+    box-shadow: 0 30px 30px -10px rgba(142, 142, 142, 0.3), 0 16px 40px rgba(46, 125, 50, 0.18), 0 2px 12px rgba(0,0,0,0.10);
+    z-index: 3;
 }
 
-@media (max-width: 700px) {
-    .swipe-card {
-        flex-direction: column;
-        width: 98vw;
-        height: 420px;
-        max-width: 99vw;
-        max-height: 80vh;
-        border-radius: 16px;
-    }
-    .swipe-card-thumb {
-        width: 100%;
-        height: 45%;
-        min-width: 0;
-        min-height: 120px;
-        border-radius: 16px 16px 0 0;
-    }
-    .swipe-card-info {
-        width: 100%;
-        padding: 12px 8px 10px 8px;
-        gap: 7px;
-    }
+
+.swipe-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 0;
+    margin: 0;
+}
+.swipe-card-header {
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-light-swipe);
+}
+.swipe-card-header h2 {
+    font-family: var(--font-display);
+    font-size: 1.7rem;
+    color: var(--primary-green);
+    margin-bottom: 4px;
+    line-height: 1.2;
+}
+.swipe-card-header .release-date {
+    font-size: 0.95rem;
+    color: #666;
+}
+
+.swipe-card-details,
+.swipe-card-cast,
+.swipe-card-summary {
+    margin: 0;
+    padding: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+.swipe-card-details .detail-label,
+.swipe-card-cast .detail-label,
+.swipe-card-summary .detail-label {
+    display: block;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 5px;
+}
+.swipe-card-details .detail-label i,
+.swipe-card-cast .detail-label i,
+.swipe-card-summary .detail-label i {
+    margin-right: 8px;
+    color: var(--primary-green);
+    width: 1em;
+    text-align: center;
+}
+.swipe-card-details span span,
+.swipe-card-cast .cast-list,
+.swipe-card-summary .summary-text {
+    color: #555;
+    display: block;
+    padding-left: calc(1em + 8px);
+}
+.swipe-card-details .detail-label:first-of-type span {
+    display: inline;
+    padding-left: 0;
+}
+.swipe-card-details .detail-label {
+    display: inline-block;
+    margin-right: 15px;
+}
+
+/* --- NEW DETAIL ROW STYLES --- */
+.swipe-card-details-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.detail-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+}
+
+.detail-label {
+    min-width: 120px;
+    font-weight: 600;
+    color: var(--primary-green);
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 /* --- FEEDBACK OVERLAYS --- */
 .swipe-feedback {
     position: absolute;
-    top: 35px; /* Slightly lower */
-    padding: 12px 25px;
-    border-radius: 12px;
-    font-size: clamp(1.5rem, 5.5vw, 2.2rem);
+    top: 30px;
+    padding: 10px 22px;
+    border-radius: 10px;
+    font-size: clamp(1.3rem, 5vw, 2rem);
     font-weight: bold;
     color: var(--text-light);
     opacity: 0;
-    /* More dynamic transition for feedback */
-    transition: opacity var(--card-feedback-duration) ease-in-out, transform var(--card-feedback-duration) cubic-bezier(0.215, 0.610, 0.355, 1);
+    transition: opacity 0.3s, transform 0.3s;
     text-transform: uppercase;
     pointer-events: none;
-    border: 3px solid rgba(255,255,255,0.7); /* Thicker border */
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.25);
-    z-index: 3;
+    border: 2px solid rgba(255,255,255,0.6);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.18);
+    z-index: 4;
 }
 
 .swipe-feedback.left {
-    left: 30px;
-    background: linear-gradient(90deg, var(--accent-red-swipe) 70%, transparent 100%);
-    transform: rotate(-15deg) scale(0.8); /* Initial state for animation */
-    --current-feedback-rotate: -10deg; /* CSS var for JS to potentially override or for keyframes */
+    left: 25px;
+    background: linear-gradient(90deg, var(--accent-red-swipe) 80%, #fff0 100%);
+    transform: rotate(-8deg) scale(0.95);
 }
 .swipe-feedback.right {
-    right: 30px;
-    background: linear-gradient(270deg, var(--secondary-green) 70%, transparent 100%);
-    transform: rotate(15deg) scale(0.8); /* Initial state for animation */
-    --current-feedback-rotate: 10deg;
+    right: 25px;
+    background: linear-gradient(270deg, var(--secondary-green) 80%, #fff0 100%);
+    transform: rotate(8deg) scale(0.95);
 }
 
 .swipe-card.show-feedback-left .swipe-feedback.left,
 .swipe-card.show-feedback-right .swipe-feedback.right {
-    opacity: 0.95; /* Slightly transparent */
-    transform: scale(1.1) rotate(var(--current-feedback-rotate));
+    opacity: 1;
+    transform: scale(1.08) rotate(var(--feedback-rotate, 8deg));
 }
 
-/* --- CARD REACTION & SWIPE ANIMATIONS --- */
-/* Class for immediate reaction before full swipe */
-.swipe-card.reacting-left {
-    transform: rotate(calc(-1 * var(--card-reaction-tilt)));
-}
-.swipe-card.reacting-right {
-    transform: rotate(var(--card-reaction-tilt));
-}
-
+/* --- SWIPE ANIMATIONS --- */
 .swipe-card.swiping-left {
-    transform: translateX(-150%) rotate(-20deg) !important; /* More pronounced exit */
+    transform: translateX(-130%) rotate(-14deg) !important;
     opacity: 0 !important;
 }
 .swipe-card.swiping-right {
-    transform: translateX(150%) rotate(20deg) !important; /* More pronounced exit */
+    transform: translateX(130%) rotate(14deg) !important;
     opacity: 0 !important;
 }
 .swipe-card.new-card-prepare {
     opacity: 0;
-    transform: translateY(50px) scale(0.92); /* Start further down and smaller */
-    /* Ensure transition is active for entry */
-    transition: transform var(--card-swipe-duration) cubic-bezier(0.34, 1.56, 0.64, 1), opacity calc(var(--card-swipe-duration) * 0.8) ease-in-out;
+    transform: translateY(40px) scale(0.96);
 }
-
 
 /* --- ACTION BUTTONS --- */
 .swipe-actions {
-    gap: 35px; /* More space */
-    margin-top: 30px; /* Increased margin */
     display: flex;
+    gap: 36px;
+    margin-top: 150px;
     justify-content: center;
-    padding-bottom: 20px; /* Ensure space from footer */
 }
 
 .action-btn {
-    width: 70px; /* Larger buttons */
-    height: 70px;
-    font-size: 2rem; /* Larger icon */
+    background: var(--text-light);
+    border: 2px solid var(--primary-green);
     border-radius: 50%;
-    background: var(--card-bg); /* Consistent with card */
-    border: 2.5px solid; /* Border color set individually */
-    box-shadow: 0 6px 20px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.06); /* Refined shadow */
-    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s, background-color 0.2s, color 0.2s;
+    width: 68px;
+    height: 68px;
+    font-size: clamp(1.7rem, 6vw, 2.3rem);
+    cursor: pointer;
+    box-shadow: var(--button-shadow);
+    transition: transform 0.18s, box-shadow 0.18s, background 0.18s, color 0.18s;
     display: flex;
     justify-content: center;
     align-items: center;
     outline: none;
-    cursor: pointer;
 }
 
 #swipeLeftButton {
@@ -291,10 +412,10 @@ nav {
     border-color: var(--accent-red-swipe);
 }
 #swipeLeftButton:hover {
-    background-color: var(--accent-red-swipe);
+    background: var(--accent-red-swipe);
     color: var(--text-light);
-    transform: scale(1.15); /* More pronounced hover */
-    box-shadow: 0 10px 25px -5px rgba(231, 76, 60, 0.25);
+    transform: scale(1.12);
+    box-shadow: 0 8px 22px -6px rgba(231, 76, 60, 0.18);
 }
 
 #swipeRightButton {
@@ -302,59 +423,60 @@ nav {
     border-color: var(--primary-green);
 }
 #swipeRightButton:hover {
-    background-color: var(--primary-green);
+    background: var(--primary-green);
     color: var(--text-light);
-    transform: scale(1.15); /* More pronounced hover */
-    box-shadow: 0 10px 25px -5px rgba(46, 125, 50, 0.25);
+    transform: scale(1.12);
+    box-shadow: 0 8px 22px -6px rgba(46, 125, 50, 0.18);
 }
 
 .action-btn:active {
-    transform: scale(1.05); /* Slightly smaller active scale */
-    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    transform: scale(1.04);
 }
 
 /* --- NO MORE CARDS MESSAGE --- */
 #noMoreCardsMessage {
-    font-size: clamp(1.2rem, 5vw, 1.5rem); /* Slightly larger */
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    font-size: clamp(1.1rem, 5vw, 1.4rem);
     color: var(--text-dark);
     text-align: center;
-    padding: 40px 25px;
-    background: var(--card-bg);
-    border-radius: 20px; /* Match card style */
+    padding: 35px 20px;
+    background: var(--card-bg); /* Will also get the glass effect */
+    border-radius: 18px;
     box-shadow: var(--card-shadow);
-    margin-top: 0; /* Will be absolutely positioned or flex-centered in stack */
-    width: 90%;
-    max-width: 400px; /* Ensure it fits within stack width */
-    opacity: 0; /* Hidden by default, JS controls display */
-    transform: scale(0.95);
-    transition: opacity 0.4s ease, transform 0.4s ease;
-    pointer-events: none; /* Initially not interactive */
+    margin-top: 30px;
+    width: 100%;
+    max-width: 420px;
+    /* Add backdrop filter if you want it consistently everywhere,
+       though its effect might be subtle on --background-light */
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
 }
-#noMoreCardsMessage.visible { /* Class to show the message */
+#noMoreCardsMessage.visible {
     opacity: 1;
-    transform: scale(1);
-    pointer-events: auto;
+    transform: translateY(0) scale(1);
 }
-
 #noMoreCardsMessage .emoji {
-    font-size: 2.5em;
+    font-size: 2.2em;
     display: block;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
 /* --- VIDEO MODAL --- */
 .video-modal-overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Darker overlay */
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    display: none; /* JS controls this */
+    background: rgba(0, 0, 0, 0.38);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    display: none;
     justify-content: center;
     align-items: center;
     z-index: 1000;
     opacity: 0;
-    transition: opacity 0.4s ease; /* Smoother transition */
+    transition: opacity 0.35s;
 }
 .video-modal-overlay.active {
     display: flex;
@@ -362,15 +484,15 @@ nav {
 }
 
 .video-modal-content {
-    background: #111; /* Darker modal for video focus */
-    padding: 20px;
-    border-radius: 16px; /* Softer radius */
-    box-shadow: 0 20px 50px rgba(0,0,0,0.6); /* Stronger shadow */
+    background: #1a1a1a;
+    padding: 18px;
+    border-radius: 12px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
     position: relative;
-    width: 90%;
-    max-width: 960px; /* Slightly larger max-width */
-    transform: scale(0.9);
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    width: 95%;
+    max-width: 900px;
+    transform: scale(0.96);
+    transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 .video-modal-overlay.active .video-modal-content {
     transform: scale(1);
@@ -378,35 +500,32 @@ nav {
 
 .video-modal-close {
     position: absolute;
-    top: -18px; right: -18px; /* Further out */
-    font-size: 1.6rem; /* Adjusted size */
-    font-weight: bold;
+    top: -15px; right: -15px;
+    font-size: 1.8rem;
     color: #fff;
     background: var(--primary-green);
     border-radius: 50%;
-    width: 42px; height: 42px; /* Larger close button */
+    width: 38px; height: 38px;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    transition: background 0.25s, transform 0.25s ease-out;
+    transition: background 0.2s, transform 0.2s;
     line-height: 1;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    border: 2px solid #fff; /* Border for better visibility */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
 }
 .video-modal-close:hover {
     background: var(--secondary-green);
-    transform: rotate(180deg) scale(1.1); /* More interactive hover */
+    transform: rotate(90deg) scale(1.1);
 }
 
 .video-iframe-container {
     position: relative;
     width: 100%;
-    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    padding-bottom: 56.25%;
     height: 0;
     overflow: hidden;
-    border-radius: 10px; /* Rounded corners for iframe container */
-    background-color: #000; /* Black bg for iframe */
+    border-radius: 8px;
 }
 
 .video-iframe-container iframe {
@@ -417,50 +536,163 @@ nav {
 
 /* --- FOOTER --- */
 footer {
-    margin-top: auto; /* Pushes footer to bottom if content is short */
-    padding-top: 30px; /* More space above footer */
+    margin-top: 0px;
     font-size: 0.9em;
-    color: #666; /* Slightly lighter */
+    color: var(--text-light);
     text-align: center;
-    padding-bottom: 20px;
-    width: 100%;
 }
 
 /* --- RESPONSIVE --- */
-@media (max-width: 768px) { /* Adjusted breakpoint */
-    .swipe-hero {
-        padding-top: 5px;
-        margin-bottom: 5px;
+@media (max-width: 700px) {
+    .logo-placeholder {
+        top: 12px;
+        left: 12px;
+        width: 110px;
     }
+    .logo-placeholder img {
+        width: 100%;
+        height: auto;
+    }
+
     .swipe-card-stack {
         max-width: 98vw;
-        height: 62vh;
-        min-height: 260px;
+        min-height: auto;
+    }
+    .swipe-card {
+        min-height: auto;
+        aspect-ratio: unset;
+        border-radius: 14px;
+        flex-direction: column;
     }
     .swipe-card-thumb {
-        min-height: 80px;
-        max-height: 120px;
+        height: 280px;
+        border-radius: 14px 14px 0 0;
+        padding: 8px; /* Adjusted padding for mobile */
     }
-    .swipe-card-info {
-        padding: 10px 6px;
-        gap: 7px;
+    .swipe-card-thumb img {
+        border-radius: 8px; /* (thumb radius - padding) approx (14px - (8px/2)) -> 10px, or (14px - 8px top/bottom) */
+    }
+
+    /* Hide the bottom title overlay as details panel is always visible */
+    .swipe-card-title-overlay {
+        display: none;
+    }
+
+    /* Always show details on mobile, no hover needed */
+    .swipe-card-details-panel {
+        opacity: 1;
+        pointer-events: auto;
+        position: relative;
+        /* background: var(--card-bg); /* Inherits main card glass if desired */
+        /* Or more opaque for readability if needed: */
+        background: rgba(255, 255, 255, 0.85);
+        -webkit-backdrop-filter: none; /* No specific blur needed if not overlaying image */
+        backdrop-filter: none;
+        border-radius: 0 0 14px 14px;
+        padding: 16px 14px;
+        z-index: 1;
+    }
+
+    /* Remove hover/focus transform effect for the card itself on mobile */
+    .swipe-card:hover,
+    .swipe-card:focus-within {
+        transform: none;
+        box-shadow: var(--card-shadow); /* Revert to default shadow */
+    }
+
+    .swipe-card-header h2 {
+        font-size: 1.4rem;
+    }
+    .swipe-card-details,
+    .swipe-card-cast,
+    .swipe-card-summary {
+        font-size: 0.88rem;
+    }
+     .swipe-card-details .detail-label {
+        display: block;
+        margin-right: 0;
+        margin-bottom: 8px;
+    }
+    .swipe-card-details span span,
+    .swipe-card-cast .cast-list,
+    .swipe-card-summary .summary-text {
+        padding-left: 0;
     }
 }
 
-@media (max-width: 480px) { /* Adjusted breakpoint for smaller devices */
-     body {
-        padding: 10px 0;
-    }
+@media (max-width: 480px) {
     .swipe-hero {
-        padding-top: 2px;
-        margin-bottom: 2px;
+        padding-top: 70px;
     }
-    .swipe-card-stack {
-        height: 56vh;
-        min-height: 180px;
+    .swipe-title {
+        font-size: clamp(1.8rem, 8vw, 2.2rem);
     }
+    .swipe-tagline {
+        font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+    }
+
     .swipe-card-thumb {
-        min-height: 60px;
-        max-height: 90px;
+        height: 220px;
+        padding: 6px; /* Further adjust padding for smaller screens */
     }
+    .swipe-card-thumb img {
+        border-radius: 6px; /* Adjust accordingly */
+    }
+
+    .swipe-card-details-panel {
+        padding: 12px 10px;
+    }
+    .swipe-card-header h2 {
+        font-size: 1.3rem;
+    }
+
+    .swipe-actions {
+        gap: 28px;
+        margin-top: 18px;
+    }
+    .action-btn {
+        width: 60px;
+        height: 60px;
+        font-size: 1.6rem;
+    }
+
+    #noMoreCardsMessage {
+        border-radius: 12px;
+        padding: 25px 15px;
+        font-size: 1rem;
+    }
+    #noMoreCardsMessage .emoji {
+        font-size: 2em;
+    }
+
+    .video-modal-content {
+        border-radius: 10px;
+        padding: 12px;
+    }
+    .video-modal-close {
+        width: 32px;
+        height: 32px;
+        font-size: 1.5rem;
+        top: -12px;
+        right: -12px;
+    }
+}
+
+/* --- LEAF STYLING OVERRIDE --- */
+.leaf {
+    width: 50%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-top-left-radius: 2rem;
+    border-bottom-left-radius: 2rem;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.leaf.bottom-right {
+    filter: blur(3px);
+    bottom: -60px;
+    right: 0px;
+    transform: rotate(0deg) scale(1.6);
 }
